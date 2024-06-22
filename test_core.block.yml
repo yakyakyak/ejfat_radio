@@ -1,0 +1,28 @@
+id: test_core
+label: Test Core
+category: '[GRC Hier Blocks]'
+
+parameters:
+-   id: samp_rate
+    label: samp_rate
+    dtype: real
+    default: '10000'
+    hide: none
+
+inputs: []
+
+outputs:
+-   label: out
+    dtype: complex
+    vlen: 1
+
+templates:
+    imports: 'from test_core import test_core  # grc-generated hier_block'
+    make: "test_core(\n    samp_rate=${ samp_rate },\n)"
+    callbacks:
+    - set_samp_rate(${ samp_rate })
+
+documentation: /Users/yak/.grc_gnuradio/test_core.py
+grc_source: /Users/yak/Projects/gnu-radio/gr-test/test_core.grc
+
+file_format: 1
