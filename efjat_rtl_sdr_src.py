@@ -74,10 +74,10 @@ class efjat_rtl_sdr_src(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self._rf_gain_range = qtgui.Range(20, 70, 1, 20, 200)
+        self._rf_gain_range = qtgui.Range(0, 70, 1, 20, 200)
         self._rf_gain_win = qtgui.RangeWidget(self._rf_gain_range, self.set_rf_gain, "'rf_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._rf_gain_win)
-        self._if_gain_range = qtgui.Range(20, 70, 5, 20, 200)
+        self._if_gain_range = qtgui.Range(0, 70, 5, 20, 200)
         self._if_gain_win = qtgui.RangeWidget(self._if_gain_range, self.set_if_gain, "'if_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._if_gain_win)
         self._fm_channel_range = qtgui.Range(99.1E6, 108.1E6, 100000, 106.1E6, 200)
@@ -284,9 +284,9 @@ class efjat_rtl_sdr_src(gr.top_block, Qt.QWidget):
             firdes.low_pass(
                 1,
                 samp_rate,
-                50000,
+                100000,
                 10000,
-                window.WIN_KAISER,
+                window.WIN_BLACKMAN,
                 6.76))
         self.audio_sink_0 = audio.sink(32000, '', True)
         self.analog_wfm_rcv_pll_0 = analog.wfm_rcv_pll(
@@ -322,7 +322,7 @@ class efjat_rtl_sdr_src(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 50000, 10000, window.WIN_KAISER, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 100000, 10000, window.WIN_BLACKMAN, 6.76))
         self.osmosdr_source_0.set_sample_rate(self.samp_rate)
         self.qtgui_freq_sink_x_0.set_frequency_range(self.fm_channel, self.samp_rate)
         self.qtgui_waterfall_sink_x_0.set_frequency_range(self.fm_channel, self.samp_rate)

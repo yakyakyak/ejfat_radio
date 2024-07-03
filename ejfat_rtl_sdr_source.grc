@@ -63,7 +63,7 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: '20'
+    start: '0'
     step: '5'
     stop: '70'
     value: '20'
@@ -84,7 +84,7 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: '20'
+    start: '0'
     step: '1'
     stop: '70'
     value: '20'
@@ -184,7 +184,7 @@ blocks:
     alias: ''
     beta: '6.76'
     comment: ''
-    cutoff_freq: '50000'
+    cutoff_freq: '100000'
     decim: '4'
     gain: '1'
     interp: '1'
@@ -193,7 +193,7 @@ blocks:
     samp_rate: samp_rate
     type: fir_filter_ccf
     width: '10000'
-    win: window.WIN_KAISER
+    win: window.WIN_BLACKMAN
   states:
     bus_sink: false
     bus_source: false
