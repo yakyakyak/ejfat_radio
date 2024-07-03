@@ -14,7 +14,6 @@ from gnuradio import qtgui
 from PyQt5 import QtCore
 from gnuradio import analog
 from gnuradio import audio
-from gnuradio import blocks
 from gnuradio import filter
 from gnuradio.filter import firdes
 from gnuradio import gr
@@ -272,8 +271,8 @@ class efjat_rtl_sdr_src(gr.top_block, Qt.QWidget):
         self.osmosdr_source_0.set_sample_rate(samp_rate)
         self.osmosdr_source_0.set_center_freq(fm_channel, 0)
         self.osmosdr_source_0.set_freq_corr(0, 0)
-        self.osmosdr_source_0.set_dc_offset_mode(1, 0)
-        self.osmosdr_source_0.set_iq_balance_mode(1, 0)
+        self.osmosdr_source_0.set_dc_offset_mode(0, 0)
+        self.osmosdr_source_0.set_iq_balance_mode(0, 0)
         self.osmosdr_source_0.set_gain_mode(False, 0)
         self.osmosdr_source_0.set_gain(rf_gain, 0)
         self.osmosdr_source_0.set_if_gain(if_gain, 0)
@@ -285,17 +284,14 @@ class efjat_rtl_sdr_src(gr.top_block, Qt.QWidget):
             firdes.low_pass(
                 1,
                 samp_rate,
-                100000,
+                50000,
                 10000,
                 window.WIN_KAISER,
                 6.76))
-        self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
-        self.blocks_throttle2_0.set_max_output_buffer(1000)
-        self.audio_sink_0_0 = audio.sink(48000, '', True)
-        self.audio_sink_0 = audio.sink(48000, '', True)
+        self.audio_sink_0 = audio.sink(32000, '', True)
         self.analog_wfm_rcv_pll_0 = analog.wfm_rcv_pll(
-        	demod_rate=256000,
-        	audio_decimation=8,
+        	demod_rate=512000,
+        	audio_decimation=16,
         	deemph_tau=(75e-6),
         )
 
@@ -303,12 +299,11 @@ class efjat_rtl_sdr_src(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
+        self.connect((self.analog_wfm_rcv_pll_0, 1), (self.audio_sink_0, 1))
         self.connect((self.analog_wfm_rcv_pll_0, 0), (self.audio_sink_0, 0))
-        self.connect((self.analog_wfm_rcv_pll_0, 1), (self.audio_sink_0_0, 0))
         self.connect((self.analog_wfm_rcv_pll_0, 0), (self.qtgui_freq_sink_x_0_0, 0))
         self.connect((self.analog_wfm_rcv_pll_0, 1), (self.qtgui_freq_sink_x_0_0_0, 0))
-        self.connect((self.blocks_throttle2_0, 0), (self.analog_wfm_rcv_pll_0, 0))
-        self.connect((self.low_pass_filter_0, 0), (self.blocks_throttle2_0, 0))
+        self.connect((self.low_pass_filter_0, 0), (self.analog_wfm_rcv_pll_0, 0))
         self.connect((self.osmosdr_source_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.osmosdr_source_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.osmosdr_source_0, 0), (self.qtgui_waterfall_sink_x_0, 0))
@@ -327,8 +322,7 @@ class efjat_rtl_sdr_src(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.blocks_throttle2_0.set_sample_rate(self.samp_rate)
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 100000, 10000, window.WIN_KAISER, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 50000, 10000, window.WIN_KAISER, 6.76))
         self.osmosdr_source_0.set_sample_rate(self.samp_rate)
         self.qtgui_freq_sink_x_0.set_frequency_range(self.fm_channel, self.samp_rate)
         self.qtgui_waterfall_sink_x_0.set_frequency_range(self.fm_channel, self.samp_rate)

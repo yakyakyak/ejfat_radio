@@ -43,7 +43,7 @@ class test_ejfat_udp_source(gr.top_block):
         self.test_core_0 = test_core(
             samp_rate=10000,
         )
-        self.network_udp_sink_0 = network.udp_sink(gr.sizeof_gr_complex, 1, '127.0.0.1', 2000, 0, 1472, False)
+        self.network_udp_sink_0 = network.udp_sink(gr.sizeof_gr_complex, 1, '198.128.0.164', 2000, 0, 1472, False)
 
 
         ##################################################
